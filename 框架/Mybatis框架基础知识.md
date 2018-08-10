@@ -21,7 +21,17 @@ tags:
 update user set name='admin', version=version+1 where id='1' and version=1;
 ```
 
+#### 二级缓存
 
+##### 实现原理
+
+##### 缺点
+
+- 由于二级缓存是在namespace下的，当在不同的namespace下修改数据库时，会导致数据一致性问题。而且当namespace下进行delete，update时，会刷新namespace下所有数据。
+
+##### 缺陷避免
+
+- 使用单表操作，不要联接查询。
 
 ## 问题
 
