@@ -145,6 +145,150 @@ private UserService userService3;
 
 - AOP,面向切面编程，可以通过预编译方式（静态代理）和运行期（动态代理）实现在不修改源代码的情况下给程序动态统一添加功能的一种技术。
 
+##### 声明式AOP
+
+- 以下为一个日志打印的aop示例代码
+```java
+
+import java.util.Arrays;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+/**
+ * 微信restapi日志切面类
+ **/
+@Aspect
+@Component
+@Order(1)
+public class WebLogAspect {
+
+	private Logger logger = LogManager.getLogger(this);
+
+	private ThreadLocal<Long> startTime = new ThreadLocal<>();
+
+	@Pointcut("execution(public * com.xxx.xxx.controller..*.*(..))")
+	public void webLog() {
+	}
+
+	@Before("webLog()")
+	public void doBefore(JoinPoint joinPoint) throws Throwable {
+		startTime.set(System.currentTimeMillis());
+		// 接收到请求，记录请求内容
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = attributes.getRequest();
+
+		// 记录下请求内容
+		logger.info("URL : " + request.getRequestURL().toString());
+		logger.info("HTTP_METHOD : " + request.getMethod());
+		logger.info("HTTP_HEAD_ACCEPT : " + request.getHeader("accept"));
+		logger.info("HTTP_HEAD_CONTENTTYPE : " + request.getHeader("content-type"));
+		logger.info("IP : " + request.getRemoteAddr());
+		logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
+				+ joinPoint.getSignature().getName());
+		logger.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
+
+	}
+
+     @Around("controllerAspect()")
+    public Object Around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        logger.info("@Around：执行目标方法之前...");
+        Object obj= proceedingJoinPoint.proceed();
+        logger.info("@Around：执行目标方法之后...");
+        logger.info("@Around：被织入的目标对象为：" + proceedingJoinPoint.getTarget());
+        logger.info( "@Around：原返回值：" + obj + "，这是返回结果的后缀");
+        return obj;
+    }
+ 
+    @After("controllerAspect()")
+    public void After(JoinPoint point){
+        logger.info("@After：模拟释放资源...");
+        logger.info("@After：目标方法为：" +
+                point.getSignature().getDeclaringTypeName() +
+                "." + point.getSignature().getName());
+        logger.info("@After：参数为：" + Arrays.toString(point.getArgs()));
+        logger.info("@After：被织入的目标对象为：" + point.getTarget());
+    }
+
+
+	@AfterReturning(returning = "ret", pointcut = "webLog()")
+	public void doAfterReturning(JoinPoint joinPoint, Object result) throws Throwable {
+		// 处理完请求，返回内容
+		logger.info("RESPONSE : " + result);
+		logger.info("SPEND TIME : " + (System.currentTimeMillis() - startTime.get()));
+	}
+
+    @AfterThrowing("controllerAspect()")
+    public void AfterThrowing(JoinPoint joinPoint, Exception ex){
+        logger.info("异常通知....");
+    }
+}
+```
+
+##### 多个AOP方法的执行
+
+- 可以通过Order来指定aop方法的执行顺序，order值越小，则开始越先执行，结束时最先执行的最后结束。设置Order值有三种方式。
+1. 过实现org.springframework.core.Ordered接口
+  ```java
+@Component  
+@Aspect  
+@Slf4j  
+public class MessageQueueAopAspect implements Ordered{@Override  
+    public int getOrder() {  
+        return 2;  
+    }  
+      
+} 
+  ```
+2. 通过@Order注解
+  ```java
+@Component  
+@Aspect  
+@Slf4j  
+@Order(1)  
+public class MessageQueueAopAspect1{  
+}  
+  ```
+3. 通过spring配置文件
+  ```xml
+<aop:config expose-proxy="true">  
+    <aop:aspect ref="aopBean" order="0">    
+        <aop:pointcut id="testPointcut"  expression="@annotation(xxx.xxx.xxx.annotation.xxx)"/>    
+        <aop:around pointcut-ref="testPointcut" method="doAround" />    
+    </aop:aspect>    
+</aop:config>
+  ```
+
+##### aop切面语法
+
+> Spring AOP支持的AspectJ切入点指示符如下：
+- execution：用于匹配方法执行的连接点；
+- within：用于匹配指定类型内的方法执行；
+- this：用于匹配当前AOP代理对象类型的执行方法；注意是AOP代理对象的类型匹配，这样就可能包括引入接口也类型匹配；
+- target：用于匹配当前目标对象类型的执行方法；注意是目标对象的类型匹配，这样就不包括引入接口也类型匹配；
+- args：用于匹配当前执行的方法传入的参数为指定类型的执行方法；
+- @within：用于匹配所以持有指定注解类型内的方法；
+- @target：用于匹配当前目标对象类型的执行方法，其中目标对象持有指定的注解；
+- @args：用于匹配当前执行的方法传入的参数持有指定注解的执行；
+- @annotation：用于匹配当前执行方法持有指定注解的方法；
+- bean：Spring AOP扩展的，AspectJ没有对于指示符，用于匹配特定名称的Bean对象的执行方法；
+- reference pointcut：表示引用其他命名切入点，只有@ApectJ风格支持，Schema风格不支持。
+
+###### 博客
+
+- [https://blog.csdn.net/zhengchao1991/article/details/53391244](https://blog.csdn.net/zhengchao1991/article/details/53391244)
+
 ##### 代理机制
 
 ###### 静态代理
