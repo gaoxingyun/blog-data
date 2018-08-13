@@ -44,6 +44,10 @@ int[][] temp3 = new int[][]{{1,2},{3,4,5}};
 int[][] temp4 = {{1,2},{3,4,5}};
 ```
 
+#### lambda表达式
+
+- [http://www.importnew.com/16436.html](http://www.importnew.com/16436.html)
+
 #### java注释
 - Java 有三种注释方式。前两种分别是 // 和 /* */，第三种被称作说明注释，它以 /** 开始，以 */结束。
 
