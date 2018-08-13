@@ -21,7 +21,21 @@ tags:
 update user set name='admin', version=version+1 where id='1' and version=1;
 ```
 
-#### 二级缓存
+#### 缓存
+
+##### 默认特性
+
+1. 映射语句文件中的所有 select 语句将会被缓存。
+2. 映射语句文件中的所有 insert,update 和 delete 语句会刷新缓存。
+3. 缓存会使用 Least Recently Used(LRU,最近最少使用的)算法来收回。
+4. 根据时间表(比如 no Flush Interval,没有刷新间隔), 缓存不会以任何时间顺序 来刷新。
+5. 缓存会存储列表集合或对象(无论查询方法返回什么)的 1024 个引用。
+6. 缓存会被视为是 read/write(可读/可写)的缓存,意味着对象检索不是共享的,而 且可以安全地被调用者修改,而不干扰其他调用者或线程所做的潜在修改
+
+
+## 文档
+
+- [mybatis3官方文档](http://www.mybatis.org/mybatis-3/zh/index.html)
 
 ##### 实现原理
 
