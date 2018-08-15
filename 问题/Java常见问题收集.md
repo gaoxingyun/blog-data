@@ -53,3 +53,5 @@ tags:
 已经知道obj为String类型的情况下，可以直接使用方法1转换为String，转换为String后判null条件为：if (objStr != null)
 慎用方法2
 对于不知道具体类型的情况下，可以使用方法3，只是转换后String的判null条件改为：if (!objStr.equals('null'))
+19. Java注解的值如何使用变量？
+- java注解的值只能为字符串，或者是static final的常量。

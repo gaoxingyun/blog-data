@@ -51,3 +51,79 @@ update user set name='admin', version=version+1 where id='1' and version=1;
 
 - 报错  org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.builder.xml.IncompleteStatementException: Could not find parameter map java.util.Map  
 解决：搜索文件*.xml 搜索词: parameterMap 然后将parameterMap 改为parameterType
+
+#### 缓存问题
+
+```java
+
+import java.lang.annotation.*;
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface CacheData {
+
+    /**
+     * 缓存key前缀
+     *
+     * @return
+     */
+    String value() default "";
+}
+
+```
+
+```java
+
+import com.roncoo.pay.common.core.cache.key.CacheKey;
+import com.roncoo.pay.common.core.cache.redis.RedisUtils;
+import com.roncoo.pay.service.annotation.CacheData;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Aspect
+@Component
+public class CacheDataAspect {
+
+    @Pointcut("@annotation(com.xxx.pay.service.annotation.CacheData)")
+    public void cacheDataAspect() {
+
+    }
+
+    @Around(value = "@annotation(cacheData)")
+    public Object around(ProceedingJoinPoint joinPoint, CacheData cacheData) throws Throwable {
+        log.debug("cacheData注解切面执行，{}{}", joinPoint.getThis(), cacheData.value());
+        String cacheKey = cacheData.value();
+        Object[] args = joinPoint.getArgs();
+        for (int i = 0; i < args.length; i++) {
+            cacheKey = cacheKey + CacheKey.KEY_SEPARATOR + args[i];
+        }
+        log.debug("cacheData切面获得缓存Key: {}", cacheKey);
+        Object value = RedisUtils.get(cacheKey);
+        log.debug("cacheData切面获得缓存数据：{}", value);
+        if (value != null) {
+            log.debug("cacheData切面获得缓存数据不为空，直接返回");
+            return value;
+        }
+        value = joinPoint.proceed();
+        log.debug("cacheData切面从方法查询数据：{}", value);
+        if (value != null) {
+            log.debug("cacheData切面从方法查询数据不为空，保存数据到redis中");
+            RedisUtils.save(cacheKey, value);
+        }
+        return value;
+    }
+}
+
+```
+
+- 使用
+
+```
+@CacheData("profix")
+```
