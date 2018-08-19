@@ -52,6 +52,12 @@ tags:
 4. session：一个HTTP Session定义一个Bean。该作用域仅适用于WebApplicationContext环境.
 5. globalSession：同一个全局HTTP Session定义一个Bean。该作用域同样仅适用于WebApplicationContext环境.
 
+###### bean初始化执行方法
+
+1. 实现InitializingBean接口,继而实现afterPropertiesSet的方法 
+2. 反射原理,配置文件使用init-method标签直接注入bean
+3. 方法使用PostConstruct会在bean初始化后调用
+
 ###### 取得spring管理的bean方式
 
 1. 在初始化时保存ApplicationContext对象（适合非web程序）
@@ -111,6 +117,25 @@ private UserService userService3;
 #### spring data
 
 ##### spring JDBC
+
+###### 动态切换数据库
+- 使用org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource 动态切换数据源。继承类，重写`@Nullable
+	protected abstract Object determineCurrentLookupKey();`方法，当获取数据库连接时，会在前面调用
+    ```java
+    protected DataSource determineTargetDataSource() {
+		Assert.notNull(this.resolvedDataSources, "DataSource router not initialized");
+		Object lookupKey = determineCurrentLookupKey();
+		DataSource dataSource = this.resolvedDataSources.get(lookupKey);
+		if (dataSource == null && (this.lenientFallback || lookupKey == null)) {
+			dataSource = this.resolvedDefaultDataSource;
+		}
+		if (dataSource == null) {
+			throw new IllegalStateException("Cannot determine target DataSource for lookup key [" + lookupKey + "]");
+		}
+		return dataSource;
+	}
+    ```
+    获得真实的数据源。因此在determineCurrentLookupKey方法中，返回当前要使用的数据源key即可。为防止并发为题，返回数据源应线程安全。可使用ThreadLocal。[https://blog.csdn.net/guying4875/article/details/52314846](https://blog.csdn.net/guying4875/article/details/52314846)
 
 ###### JdbcTemplate
 

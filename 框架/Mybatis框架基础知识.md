@@ -37,6 +37,9 @@ update user set name='admin', version=version+1 where id='1' and version=1;
 
 - [mybatis3官方文档](http://www.mybatis.org/mybatis-3/zh/index.html)
 
+#### 插件
+
+- [Mybatis最入门---分页查询（拦截器分页原理及实现](https://blog.csdn.net/ABCD898989/article/details/51261163)
 
 ## 问题
 
