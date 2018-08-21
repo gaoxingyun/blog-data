@@ -53,6 +53,5 @@ schema.xml配置
 #### mycat-eye安装配置
 
 - 打开地址[http://dl.mycat.io](http://dl.mycat.io)，下载对应版本的mycat-web安装文件，解压。修改配置mycat-web/mycat-web/WEB-INF/classes/mycat.properties，修改其中的zookeeper为自己的zookeeper服务地址。执行start.sh即可启动mycat-eye，登陆$SERVER_IP:8082/mycat，即可打开mycat-eye管理页面。
-
-
+- sql统计功能，需在mycat配置文件server.xml中开启sqlStat功能。
 

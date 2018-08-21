@@ -105,9 +105,15 @@ show slave status\G;
 # Slave_IO_Running及Slave_SQL_Running进程必须正常运行，即YES状态，否则说明同步失败。
 ```
 
-
 - [https://blog.csdn.net/mycwq/article/details/17136001](https://blog.csdn.net/mycwq/article/details/17136001)
 
+#### 主库已经有数据主从复制方案
+
+- flush tables with read lock; 锁定数据库，只允许读
+-  mysqldump -uroot -p123456 TESTDB >TESTDB.sql 备份数据库
+-  cat TESTDB.sql > /usr/bin/mysql -uroot -p123456 TESTDB
+-  unlock tables; 解锁数据库
+-  
 ## 问题
 
 - mysql关于错误InnoDB is limited to row-logging when transaction isolation level is READ COMMITTED or READ UNCOMMITTED.
@@ -121,6 +127,7 @@ SET GLOBAL binlog_format = 'MIXED';
 永久解决问题方式：
 在mysql的配置文件中，找到binlog_format=mixed，把前边的#去掉。
 重启mysql服务！
+[http://javawangbaofeng.iteye.com/blog/2243306](http://javawangbaofeng.iteye.com/blog/2243306)
 
 
 - 设置最大连接数
@@ -130,3 +137,10 @@ set GLOBAL max_connections=200;
 # 查看连接数
 show processlist;
 ```
+
+- mysql自定义函数报错
+1、在MySql中创建自定义函数报错信息如下：
+ERROR 1418 (HY000): This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+解决方法：
+mysql>set global log_bin_trust_function_creators=1;
+源文档 <http://blog.csdn.net/zzs0829/article/details/3933326>

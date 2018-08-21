@@ -59,6 +59,14 @@ tags:
 > git reset --hard HEAD^      回退到上一个版本，并把工作区文件更新
 > git reset --hard commit_id  回退到指定版本，并把工作区文件更新，可配合git reflog使用
 
+#### git revert
+- git revert 撤销 某次操作，此次操作之前和之后的commit和history都会保留，并且把这次撤销 git revert是提交一个新的版本，将需要revert的版本的内容再反向修改回去，
+版本会递增，不影响之前提交的内容
+作为一次最新的提交
+> git revert HEAD                  撤销前一次 commit
+> git revert HEAD^               撤销前前一次 commit
+> git revert commit （比如：fa042ce57ebbe5bb9c8db709f719cec2c58ee7ff）撤销指定的版本，撤销也会作为一次提交进行保存。
+
 #### git merge
 > git merge --no-ff -m "合并标签" 需合并的分支   禁用Fast forward方式合并，此种方式合并可在分支历史看到合并分支的信息      
 > git merge -m "合并标签" 需合并的分支   如果可能，会使用Fast forward方式合并，此种方式在删除feature分支后丢失分支信息，但可以保持分支干净
