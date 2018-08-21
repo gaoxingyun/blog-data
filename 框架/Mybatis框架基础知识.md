@@ -11,6 +11,10 @@ tags:
 
 ## Mybatis基础知识
 
+## 文档
+
+- [mybatis3官方文档](http://www.mybatis.org/mybatis-3/zh/index.html)
+
 #### 锁
 
 - 在锁冲突较小的时候，使用乐观锁可以大大增加性能（减少类锁的开销），但是当并发较高，锁冲突特别严重的时候，由于乐观锁需要不断重试，反而会降低性能。另外，乐观锁不仅仅可以使用version字段，也可以使用时间戳，或数据库列字段等任何可以判断数据是否被修改的字段。乐观锁字段按具体业务选择，可增加并发性能，以version字段作为乐观锁，每次只能有一个事务更新成功，会造成大量操作失败，互不冲突的更新操作，宜使用不同的字段作为乐观锁。
@@ -33,10 +37,6 @@ update user set name='admin', version=version+1 where id='1' and version=1;
 6. 缓存会被视为是 read/write(可读/可写)的缓存,意味着对象检索不是共享的,而 且可以安全地被调用者修改,而不干扰其他调用者或线程所做的潜在修改
 
 
-## 文档
-
-- [mybatis3官方文档](http://www.mybatis.org/mybatis-3/zh/index.html)
-
 ##### 实现原理
 
 ##### 缺点
@@ -46,6 +46,12 @@ update user set name='admin', version=version+1 where id='1' and version=1;
 ##### 缺陷避免
 
 - 使用单表操作，不要联接查询。
+
+## 插件
+
+- [Mybatis最入门---分页查询（拦截器分页原理及实现](https://blog.csdn.net/ABCD898989/article/details/51261163)
+
+
 
 ## 问题
 
