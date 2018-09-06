@@ -49,3 +49,8 @@ tags:
 
 2. 设置不同的失效时间
 当我们向缓存中存储这些数据的时候，可以将他们的缓存失效时间错开。这样能够避免同时失效。如：在一个基础时间上加/减一个随机数，从而将这些缓存的失效时间错开。
+
+#### 问题
+
+- redistemple获取存在的key，得到的value为null？ 答：redisTemplate设置setEnableTransactionSupport(true)了，当前线程会强制先 MULTI命令。Redis Multi 命令 Redis 事务 Redis Multi 命令用于标记一个事务块的开始。事务块内的多条命令会按照先后顺序被放进一个队列当中，最后由 EXEC 命令原子性(atomic)地执行。在一个事务中，设置的值外部不可见。[https://www.cnblogs.com/softidea/p/5720938.html](https://www.cnblogs.com/softidea/p/5720938.html)
+
