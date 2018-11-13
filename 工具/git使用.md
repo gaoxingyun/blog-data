@@ -59,12 +59,19 @@ tags:
 > git reset --hard HEAD^      回退到上一个版本，并把工作区文件更新
 > git reset --hard commit_id  回退到指定版本，并把工作区文件更新，可配合git reflog使用
 
+#### git revert
+
+> git revert commit_id 回退到指定版本，不同是是通过新增提交回退版本，版本号向前，适合已经提交到远程的回退
+
 #### git merge
 > git merge --no-ff -m "合并标签" 需合并的分支   禁用Fast forward方式合并，此种方式合并可在分支历史看到合并分支的信息      
 > git merge -m "合并标签" 需合并的分支   如果可能，会使用Fast forward方式合并，此种方式在删除feature分支后丢失分支信息，但可以保持分支干净
 
 #### git rebase 分支变基
 > git rebase origin 让分支历史变为线性
+> git rebase branch_name 合并分支，遇到冲突会需要一个一个解决，并且合并后的分支线为线性，像是没有发生过合并一样。
+> git rebase --continue 解决冲突后继续合并
+> git rebase --abort 取消本次合并，回到rebase前的状态
 
 #### git help
 > git help + 命令名 查看命令详细帮助

@@ -51,6 +51,22 @@ tags:
 22. Strategy 策略模式
 23. Visitor 访问者模式
 
+#### 其他常见模式中英文对照
+
+- Wrapper 包装类(封装类)
+- provider 提供者模式
+- Registry 注册
+- Decoder 解码器
+- Encoder 编码器
+- Converter 转换器
+- Profiles 环境
+- Property 属性 配置文件
+- Resolver 决定者
+- Executor 执行者 
+- Rejected 落选者，被拒绝的
+- Constants 常量
+
+
 
 ### 工厂模式
 

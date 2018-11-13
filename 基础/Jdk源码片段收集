@@ -1,0 +1,23 @@
+---
+title: Jdk源码片段收集
+date: 2017-08-21 10:45:21
+categories: 
+- 基础
+tags: 
+- 基础
+- java
+---
+
+- 作用：通过枚举的值获取枚举值
+```java
+public static JDBCType valueOf(int type) {
+        for( JDBCType sqlType : JDBCType.class.getEnumConstants()) {
+            if(type == sqlType.type)
+                return sqlType;
+        }
+        throw new IllegalArgumentException("Type:" + type + " is not a valid "
+                + "Types.java value.");
+    }
+```
+
+- 

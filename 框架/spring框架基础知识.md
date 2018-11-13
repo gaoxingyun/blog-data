@@ -447,3 +447,22 @@ spring:
     private Validator validator;
 ```
 
+### 组件
+
+- 监听器(listener)：就是对项目起到监听的作用，它能感知到包括request(请求域)，session(会话域)和applicaiton(应用程序)的初始化和属性的变化；
+- 过滤器(filter)：就是对请求起到过滤的作用，它在监听器之后，作用在servlet之前，对请求进行过滤；
+- servlet：就是对request和response进行处理的容器，它在filter之后执行，servlet其中的一部分就是controller层（标记为servlet_2），还包括渲染视图层(标记为servlet_3)和进入controller之前系统的一些处理部分(servlet_1)，另外我们把servlet开始的时刻标记为servlet_0，servlet结束的时刻标记为servlet_4。
+- 拦截器(interceptor)：就是对请求和返回进行拦截，它作用在servlet的内部，具体来说有三个地方：
+ 1. 1）servlet_1和servlet_2之间，即请求还没有到controller层
+ 2. 2）servlet_2和servlet_3之间，即请求走出controller层次，还没有到渲染时图层
+ 3. 3）servlet_3和servlet_4之间，即结束视图渲染，但是还没有到servlet的结束
+
+- [avaWeb中监听器+过滤器+拦截器区别、配置和实际应用](https://blog.csdn.net/Jintao_Ma/article/details/52972482)
+
+#### 拦截器 HandlerInterceptor
+
+- [SpringBoot+Redis实现token鉴权的例子](https://github.com/Blank-mind/token-authentication-example)
+
+#### 监听器 HttpSessionListener
+
+#### 过滤器 Filter
