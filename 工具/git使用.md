@@ -72,6 +72,8 @@ tags:
 > git merge -m "合并标签" 需合并的分支   如果可能，会使用Fast forward方式合并，此种方式在删除feature分支后丢失分支信息，但可以保持分支干净
 
 #### git rebase 分支变基
+
+> git rebase -i [startpoint] [endpoint] 将多次提交合并修改，注意，不能修改任何已经提交到远程的commit。
 > git rebase origin 让分支历史变为线性
 > git rebase branch_name 合并分支，遇到冲突会需要一个一个解决，并且合并后的分支线为线性，像是没有发生过合并一样。
 > git rebase --continue 解决冲突后继续合并
