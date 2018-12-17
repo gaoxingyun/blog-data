@@ -47,9 +47,10 @@ tags:
 ##### server.xml配置
 
 ###### Connection配置
+
 1. 指定使用NIO模型来接受HTTP请求 
 protocol="org.apache.coyote.http11.Http11NioProtocol" 指定使用NIO模型来接受HTTP请求。默认是BlockingIO，配置为protocol="HTTP/1.1" 
-acceptorThreadCount="2"	使用NIO模型时接收线程的数目 
+acceptorThreadCount="2"	使用NIO模型时接收线程的数目
 
 2. 指定使用线程池来处理HTTP请求 
 首先要配置一个线程池来处理请求（与Connector是平级的，多个Connector可以使用同一个线程池来处理请求）
@@ -57,7 +58,7 @@ acceptorThreadCount="2"	使用NIO模型时接收线程的数目
 <Executor name="tomcatThreadPool" namePrefix="catalina-exec-" 
 maxThreads="1000" minSpareThreads="50" maxIdleTime="600000"/> 
 <Connector port="8080"	
-executor="tomcatThreadPool"	指定使用的线程池 
+executor="tomcatThreadPool"	指定使用的线程池
 ```
 
 3. 指定BlockingIO模式下的处理线程数目 
@@ -76,3 +77,20 @@ executor="tomcatThreadPool"	指定使用的线程池
 - compressionMinSize="10240"	启用压缩的输出内容大小，默认为2KB 
 - noCompressionUserAgents="gozilla, traviata"   对于以下的浏览器，不启用压缩 
 - compressableMimeType="text/html,text/xml,text/javascript,text/css,text/plain" 哪些资源类型需要压缩 
+
+## 日志
+
+### tomcat的五种日志
+
+- tomcat每次启动时，自动在logs目录下生产以下日志文件，按照日期自动备份
+  - localhost.2016-07-05.txt   //经常用到的文件之一 ，程序异常没有被捕获的时候抛出的地方
+  - catalina.2016-07-05.txt  //经常用到的文件之一，程序的输出，tomcat的日志输出等等
+  - manager.2016-07-05.txt //估计是manager项目专有的
+  - host-manager.2016-07-05.txt//估计是manager项目专有的
+  - localhost_access_log.2016-10-01.txt //tomcat访问日志记录，需要配置
+
+#### 问题
+
+1. 验证码不显示？ tomcat目录temp文件夹是否存在？
+2. tomcat启动报错too low setting for -Xss？   在tomcat的conf目录里面catalina.properties的文件，在tomcat.util.scan.DefaultJarScanner.jarsToSkip=里面加上bcprov*.jar过滤， [https://blog.csdn.net/lb89012784/article/details/50820118](https://blog.csdn.net/lb89012784/article/details/50820118)
+3. 如何打开日志访问记录？local_access.log 日志  %D 时间 https://blog.csdn.net/qq_30121245/article/details/52861935

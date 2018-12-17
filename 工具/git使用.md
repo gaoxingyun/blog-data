@@ -103,6 +103,30 @@ tags:
 #### git remote
 > git remote update origin --prune  更新远程分支列表
 
+#### git flow
+> 使用标准git flow项目模型，简化git操作，标准项目规范
+
+##### git flow命令详情
+
+```
+$ git flow help
+usage: git flow <subcommand>
+
+Available subcommands are:
+   init      Initialize a new git repo with support for the branching model.
+   feature   Manage your feature branches.
+   bugfix    Manage your bugfix branches.
+   release   Manage your release branches.
+   hotfix    Manage your hotfix branches.
+   support   Manage your support branches.
+   version   Shows version information.
+   config    Manage your git-flow configuration.
+   log       Show log deviating from base branch.
+
+Try 'git flow <subcommand> help' for details.
+
+```
+
 ## git区
 
 #### 工作区
@@ -268,8 +292,43 @@ git rebase feature;
 git push;
 ```
 
+#### git高级合并
+
+- git merge --abort 退出本次合并，并返回合并前状态
+- git merge -Xignore-space-change whitespace 忽略所有空白
+
+##### git merge 策略
+
+常规合并里分为三种:
+解决（Resolve） 递归（Recursive） 章鱼（Octopus）
+非常规两种:
+我们的（Ours） 子树（Subtree）
+
+##### git合并参数
+在看策略之前，我们先看看关于merge在做处理时候的参数 
+主要分为三种：
+
+--ff --ff--only 快速合并 只快速合并（如果有冲突就失败） --no-ff 非快速合并 --squash 将合并过来的分支的所有不同的提交，当做一次提交，提交过来 --ff和--no-ff的区别是，当解决完冲突后，no-ff会生成一次commit eg: Merge branch 'suit' into master
+
+## git发布环境
+
+### 测试环境
+    提供测试人员使用，代码分支除了可以使用master分支外，其他的分支也是可以的。
 
 
+### 回归环境
+    如果同时有好几个人参与同一个项目，那么基于master分支可能拉出非常多的开发分支，那么当这些分支合并到master上后，master上的功能可能受到影响，这种情况下，会使用一个回归环境，部署master分支的代码。
+
+
+### 预发布环境
+    这个环境中，一般会连接生产环境的数据库，使用生产环境的数据来进行测试。
+
+
+### 灰度发布版本
+    预发布环境过后，就是灰度发布了。由于一个项目，一般会部署到多台机器，所以灰度1台至三台，看看新功能是否ok，如果失败则只需要回滚几台，比价方便。注意，由于是灰度发布几种几台，所以一般会使用跳板机，然后进行域名绑定，这样才可以保证只访问有最新代码的服务器。
 
 ## 博客
 - [廖雪峰博客](https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013743858312764dca7ad6d0754f76aa562e3789478044000)
+- [官方文档](https://git-scm.com/book/zh/v2)
+- [git-merge完全解析](https://www.jianshu.com/p/58a166f24c81)
+- [Git 最佳实践：分支管理](http://blog.jobbole.com/109466/?spm=a2c4e.11153940.blogcont612492.9.77183d2b99Bwaf)

@@ -144,3 +144,9 @@ ERROR 1418 (HY000): This function has none of DETERMINISTIC, NO SQL, or READS SQ
 解决方法：
 mysql>set global log_bin_trust_function_creators=1;
 源文档 <http://blog.csdn.net/zzs0829/article/details/3933326>
+
+- mysql报无此函数？错误码: 1630 FUNCTION count does not exist. Check the 'Function Name Parsing and Resolution' section in
+数据库函数需与()连续写，中间不能加空格。
+
+
+- mysql更新时查询条件为非索引字段，会导致锁表。

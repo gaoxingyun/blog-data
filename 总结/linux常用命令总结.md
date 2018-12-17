@@ -8,7 +8,6 @@ tags:
 - linux
 ---
 
-
 ## 网络命令
 
 ###### nc
@@ -85,8 +84,6 @@ nc -w 1 -z 127.0.0.1 1-65535
 # 模拟telnet客户端
 nc -t 127.0.0.1 8888
 ```
-
-
 
 ###### curl
 
@@ -276,7 +273,6 @@ Options: (H) means HTTP/HTTPS only, (F) means FTP only
  -q                  Disable .curlrc (must be first parameter)
 ```
 
-
 ###### route
 
 - 帮助
@@ -328,8 +324,6 @@ grep '12345' catalina.out | grep '6789'
 
 ```
 
-
-
 ###### awk
 
 - awk是一个文本分析工具，用来解析文本
@@ -347,12 +341,9 @@ awk -F ':' '{printf $1}'
 netstat -tlnp | grep 9999 | awk '{printf $7}' | awk -F '/' '{printf $1}'
 ```
 
-
 ###### sed
 
 - 功能：拼接，删除，替换，字符串
-
-
 
 ###### wc
 
@@ -360,8 +351,6 @@ netstat -tlnp | grep 9999 | awk '{printf $7}' | awk -F '/' '{printf $1}'
 # 统计行数
 wc -l 
 ```
-
-
 
 ###### traceroute
 
@@ -432,3 +421,54 @@ Defaults in parentheses; comma-separated set (s) items; dash-separated ranges.
   names  select named files or files on named file systems
 Anyone can list all files; /dev warnings disabled; kernel ID check disabled.
 ```
+
+
+###### netstat
+
+```
+# netstat -h
+usage: netstat [-veenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}
+       netstat [-vnNcaeol] [<Socket> ...]
+       netstat { [-veenNac] -I[<Iface>] | [-veenNac] -i | [-cnNe] -M | -s } [delay]
+
+        -r, --route                display routing table
+        -I, --interfaces=[<Iface>] display interface table for <Iface>
+        -i, --interfaces           display interface table
+        -g, --groups               display multicast group memberships
+        -s, --statistics           display networking statistics (like SNMP)
+        -M, --masquerade           display masqueraded connections
+
+        -v, --verbose              be verbose
+        -n, --numeric              don't resolve names
+        --numeric-hosts            don't resolve host names
+        --numeric-ports            don't resolve port names
+        --numeric-users            don't resolve user names
+        -N, --symbolic             resolve hardware names
+        -e, --extend               display other/more information
+        -p, --programs             display PID/Program name for sockets
+        -c, --continuous           continuous listing
+
+        -l, --listening            display listening server sockets
+        -a, --all, --listening     display all sockets (default: connected)
+        -o, --timers               display timers
+        -F, --fib                  display Forwarding Information Base (default)
+        -C, --cache                display routing cache instead of FIB
+        -T, --notrim               stop trimming long addresses
+        -Z, --context              display SELinux security context for sockets
+
+  <Iface>: Name of interface to monitor/list.
+  <Socket>={-t|--tcp} {-u|--udp} {-S|--sctp} {-w|--raw} {-x|--unix} --ax25 --ipx --netrom
+  <AF>=Use '-A <af>' or '--<af>'; default: inet
+  List of possible address families (which support routing):
+    inet (DARPA Internet) inet6 (IPv6) ax25 (AMPR AX.25) 
+    netrom (AMPR NET/ROM) ipx (Novell IPX) ddp (Appletalk DDP) 
+    x25 (CCITT X.25)
+```
+
+- [https://blog.csdn.net/libaineu2004/article/details/78886182](https://blog.csdn.net/libaineu2004/article/details/78886182)
+```
+查看链接状态 ESTABLISHED CLOSE_WAIT TIME_WAIT ，其中服务端不应出现过多CLOSE_WAIT
+netstat -an
+
+```
+
