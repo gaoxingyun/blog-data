@@ -1,0 +1,128 @@
+---
+title: Session总结
+date: 2017-06-21 08:52:39
+categories: 
+- 总结
+tags:
+- 总结
+- linux
+---
+
+## httpSession工作原理
+
+1. 创建session，并保存到本地缓存
+2. 将sessionId放入Cookie，响应给浏览器
+3. 浏览器保存Cookie
+4. 浏览器后续请求这个站点都会带上这个Cookie
+5. 服务器根据Cookie中的sessionId就能分辨出这个请求属于哪个session
+
+## 问题
+
+- tomcat中的session中保存在哪里？tomcat本地的ConcurrentHashMap（本地缓存），以sessionId为key，以session对象为value。
+- tomcat是怎么追踪到请求属于那个session的？通过cookie，产生会话时向浏览器发送存有sessionId的cookie，后续请求都带上这个cookie。
+- session是不是在用户登录时就产生了？不是，会话是用来跟踪多个请求的，登陆只是明确会话的主人是谁（把用户信息存放到session中），不主动调用getSession或者jsp调用，是不会产生session的。因此restfulApi是不产生session的
+
+## 负载均衡
+
+### 硬件
+
+- NetScaler
+- F5
+- Radware
+- Array
+
+### 软件
+
+- LVS 4层
+- haproxy
+- nginx，简单，消耗资源少，可轻松应对10万并发 7层
+
+#### nginx负载均衡策略
+
+- 轮询
+- weight权重
+- ip_hash
+
+## session一致性解决方案
+
+- 基于ip_hash负载均衡
+- 服务器session复制
+- session统一缓存
+
+### ip_hash特点
+
+#### 优点
+
+- 配置简单，对应用无侵入，不需要修改代码
+- 只要hash属性是均匀的，多台web-server的负载是均衡的
+- 便于服务器水平扩展
+- 安全性较高
+
+#### 缺点
+
+- 服务器重启会造成部分session丢失
+- 水平扩展也会造成部分session丢失
+- 存在单点负载高的风险
+
+### 服务器session复制特点
+
+#### tomcat配置
+
+1. 修改server.xml中的Cluster节点
+2. 修改应用web.xml，增加节点：<distributable/>
+
+#### 原理
+
+- 组播 224.0.1.0-238.255.255.255为用户可用的组播地址
+
+#### 优点
+
+- 对应用无侵入性，不需要修改代码
+- 能适用各种负载均衡策略
+- 服务器重启或宕机不会造成session丢失
+- 安全性较高
+
+#### 缺点
+
+- session同步会有一定延时
+- 占用内网带宽资源
+- 受制于内存资源，水平扩展能力差
+- 服务器数量较多GG
+- 序列化反序列化消耗CPU性能
+
+### session统一保存特点
+
+#### 配置
+
+1. 增加redis client和spring session依赖
+2. 修改web.xml，增加filter：springSessionRFilter，注意：1.需拦截/* 2. filter需放到其他servlet和filter最前面
+3. 修改spring配置文件，在容器中注入spring session和redis相关bean
+
+其他：spring session会自行管理session生命周期，不受限于tomcat配置的时间
+
+#### 优点
+
+- 能适用各种负载均衡策略
+- 服务器重启或宕机不会造成session丢失
+- 安全性较高
+- 扩展能力强
+- 适合集群数量大时使用
+
+#### 缺点
+
+- 对应用有侵入，需要增加相关配置
+- 增加一次网络开销，用户体验降低
+- 序列号反序列号消耗CPU性能
+
+#### 注意的坑
+
+1. 放置在session中的对象必须是可序列化的
+2. SpringSessionRepositoryFilter的顺序要在其他获取session的filter的之前
+3. session的失效时间由redis节点失效时间决定，原有的配置不起作用
+4. 登出的时候，一定确保显示调用了session.invalidate();
+
+## tomcat-redis-session-manager另一种方式
+
+- 无spring session之前的解决方案
+
+## 无session方案 token jwt 移动端接口常用
