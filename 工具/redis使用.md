@@ -23,9 +23,9 @@ tags:
 
 #### 解决方案
 
-1. 缓存null值，防止大量对单一不存在的key查询
+1. 缓存null值，防止大量对单一不存在的key查询（可临时短时间缓存，如一分钟，不需要和普通缓存相同时间），适合对相同重复key过滤
 2. 缓存所有可用key，防止大量对多个不存在的key查询
-3. 
+
 #### 缓存雪崩
 
 #### 描述
@@ -53,4 +53,8 @@ tags:
 #### 问题
 
 - redistemple获取存在的key，得到的value为null？ 答：redisTemplate设置setEnableTransactionSupport(true)了，当前线程会强制先 MULTI命令。Redis Multi 命令 Redis 事务 Redis Multi 命令用于标记一个事务块的开始。事务块内的多条命令会按照先后顺序被放进一个队列当中，最后由 EXEC 命令原子性(atomic)地执行。在一个事务中，设置的值外部不可见。[https://www.cnblogs.com/softidea/p/5720938.html](https://www.cnblogs.com/softidea/p/5720938.html)
+
+
+## 缓存击穿问题
+
 
