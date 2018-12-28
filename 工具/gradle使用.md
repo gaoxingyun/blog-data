@@ -25,3 +25,7 @@ tags:
 
 #### gradle阿里云maven仓库
 - maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+
+#### gradle依赖管理
+
+- 执行`gradle dependencies`任务可查看gradle项目依赖关系，如果后面带*说明顶层项目已经依赖此包，gradle自动忽略此依赖。
