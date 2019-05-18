@@ -150,3 +150,10 @@ mysql>set global log_bin_trust_function_creators=1;
 
 
 - mysql更新时查询条件为非索引字段，会导致锁表。
+
+## 分区分表
+
+## 博客
+
+- [mysql分表，分区的区别和联系](http://blog.51yip.com/mysql/1029.html)
+- [mysql分区功能详细介绍，以及实例](http://blog.51yip.com/mysql/1013.html)
