@@ -64,5 +64,5 @@ java为了提高代码安全性，规定：
 不过，你的案例是以后就先给它(newImg)赋值(创建新对象，newImg 成了这个对象的引用)，而不是从它那里取值，所以声明它(newImg)的时候，不必初始化， 即 声明它(newImg)的时候的初始化是多余的。
 22. HashMap初始化大小是多少？为什么其默认负载因子是0.75？[为什么hashMap的负载因子是0.75](https://blog.csdn.net/zz18435842675/article/details/80928805) 初始化大小一半设为2的n次方，初始化大小为16，其扩容大小为16 * 0.75 = 12。
 23. Java的<init>，<cinit>与类的初始化顺序 cinit 类构造器 类初始化调用 static  init 实例构造器 类实例化调用[https://blog.csdn.net/sujz12345/article/details/52590095](https://blog.csdn.net/sujz12345/article/details/52590095)
-24. 为什么计算机中，double类型计算不精确？ 因为0.05不能在二进制中精确地表示，累加会有误差。
+24. 为什么计算机中，double类型计算不精确？ 因为0.05不能在二进制中精确地表示，累加会有误差。[IEEE 754](https://en.wikipedia.org/wiki/IEEE_754)
 25. 
