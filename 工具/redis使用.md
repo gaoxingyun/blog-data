@@ -12,6 +12,18 @@ tags:
 
 ## redis哨兵模式部署
 
+## 数据结构
+
+Redis数据类型   底层数据结构
+String         数组
+List           双向链表
+Hash           二维结构 第一维度:数组 第二维度:链表   (同java的HashMap数据结构)
+Set            Hash
+ZSet           Hash+跳跃表
+
+- [https://blog.csdn.net/shengqianfeng/article/details/82684354](https://blog.csdn.net/shengqianfeng/article/details/82684354)
+
+
 
 ## 缓存问题
 
